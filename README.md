@@ -16,6 +16,7 @@ This project provides a robust, containerized solution for deploying a VLESS-WS 
     *   Links are pre-configured with known optimized Cloudflare domains (Best IPs) for better connectivity.
     *   Generates a Base64-encoded subscription string aggregating all links for easy import into clients like v2rayN, sing-box, or Clash.
 *   **PaaS Friendly**: Stateless design driven entirely by environment variables, making it suitable for platforms like Railway, Fly.io, or Heroku.
+*   **Quick Tunnel Mode**: Supports temporary deployment using Cloudflare Quick Tunnels (trycloudflare.com) without a Cloudflare account.
 *   **Automated Builds**: Includes a GitHub Actions workflow to automatically build and push the Docker image to the GitHub Container Registry.
 
 ## Architecture
@@ -27,7 +28,7 @@ This project provides a robust, containerized solution for deploying a VLESS-WS 
 
 ## Prerequisites
 
-1.  **Cloudflare Account**: A domain name managed by Cloudflare.
+1.  **Cloudflare Account**: A domain name managed by Cloudflare (Required for stable deployment).
 2.  **Cloudflare Tunnel**:
     *   Navigate to the Cloudflare Zero Trust Dashboard.
     *   Go to **Access** > **Tunnels** > **Create a Tunnel**.
@@ -73,14 +74,28 @@ docker run -d \
   ghcr.io/your-username/vless-ws-argo:latest
 ```
 
+### Option 3: Quick Tunnel (No Account Required)
+
+If you do not provide `ARGO_TOKEN` and `PUBLIC_HOSTNAME`, the container will automatically start a **Quick Tunnel** using `trycloudflare.com`.
+
+```bash
+docker run -d --name vless-quick ghcr.io/your-username/vless-ws-argo:latest
+```
+
+**⚠️ Quick Tunnel Limitations:**
+*   **Unstable**: The URL (`*.trycloudflare.com`) changes every time the container restarts.
+*   **Temporary**: Connections may drop or expire randomly.
+*   **Not for Production**: Intended for testing or temporary usage only.
+*   **Logs**: You must check `docker logs` to find the generated `trycloudflare.com` domain.
+
 ## Configuration
 
 The application is configured entirely via environment variables.
 
 | Variable | Required | Description | Default |
 | :--- | :--- | :--- | :--- |
-| `ARGO_TOKEN` | **Yes** | The Cloudflare Tunnel token obtained from the Zero Trust Dashboard. | None |
-| `PUBLIC_HOSTNAME` | No | The public domain assigned to this tunnel (e.g., `vless.example.com`). Required for generating share links in the logs. | None |
+| `ARGO_TOKEN` | **No** | The Cloudflare Tunnel token. If missing, a Quick Tunnel is started. | None (Quick Tunnel) |
+| `PUBLIC_HOSTNAME` | No | The public domain assigned to this tunnel. Required for generating share links in standard mode. Auto-detected in Quick Tunnel mode. | None |
 | `UUID` | No | A specific VLESS User ID. If left empty, a random UUID will be generated at startup. | Randomly Generated |
 
 **Note on WebSocket Path**: The WebSocket path is automatically set to `/{UUID}?ed=2048`. It cannot be manually configured. This ensures the path is unpredictable (security) and enables Early Data (performance).
