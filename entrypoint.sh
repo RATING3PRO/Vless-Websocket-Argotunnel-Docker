@@ -114,11 +114,13 @@ if [ "$USE_QUICK_TUNNEL" = "true" ]; then
     log_info "Waiting for Quick Tunnel URL..."
     count=0
     while [ $count -lt 30 ]; do
-        if grep -q "trycloudflare.com" /tmp/cloudflared.log; then
-            QUICK_URL=$(grep -o 'https://.*\.trycloudflare\.com' /tmp/cloudflared.log | head -n 1)
-            PUBLIC_HOSTNAME=$(echo "$QUICK_URL" | sed 's/https:\/\///')
-            log_info "Quick Tunnel established: $PUBLIC_HOSTNAME"
-            break
+        if grep -q "https://.*\.trycloudflare\.com" /tmp/cloudflared.log; then
+            QUICK_URL=$(grep -o 'https://[-a-z0-9]*\.trycloudflare\.com' /tmp/cloudflared.log | head -n 1)
+            if [ -n "$QUICK_URL" ]; then
+                PUBLIC_HOSTNAME=$(echo "$QUICK_URL" | sed 's/https:\/\///')
+                log_info "Quick Tunnel established: $PUBLIC_HOSTNAME"
+                break
+            fi
         fi
         sleep 1
         count=$((count+1))
