@@ -48,7 +48,7 @@ This project provides a robust, containerized solution for deploying a VLESS-WS 
     version: '3'
     services:
       vless-argo:
-        image: ghcr.io/your-username/vless-ws-argo:latest
+        image: ghcr.io/rating3pro/vless-websocket-argotunnel-docker:latest
         container_name: vless-argo
         restart: always
         environment:
@@ -71,7 +71,7 @@ docker run -d \
   --restart always \
   -e ARGO_TOKEN="eyJhIjoi..." \
   -e PUBLIC_HOSTNAME="vless.example.com" \
-  ghcr.io/your-username/vless-ws-argo:latest
+  ghcr.io/rating3pro/vless-websocket-argotunnel-docker:latest
 ```
 
 ### Option 3: Quick Tunnel (No Account Required)
@@ -79,8 +79,10 @@ docker run -d \
 If you do not provide `ARGO_TOKEN` and `PUBLIC_HOSTNAME`, the container will automatically start a **Quick Tunnel** using `trycloudflare.com`.
 
 ```bash
-docker run -d --name vless-quick ghcr.io/your-username/vless-ws-argo:latest
+docker run -d --name vless-quick ghcr.io/rating3pro/vless-websocket-argotunnel-docker:latest
 ```
+
+
 
 **⚠️ Quick Tunnel Limitations:**
 *   **Unstable**: The URL (`*.trycloudflare.com`) changes every time the container restarts.
