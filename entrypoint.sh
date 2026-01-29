@@ -146,7 +146,7 @@ if [ -n "$PUBLIC_HOSTNAME" ]; then
     log_info "---------------------------------------------------"
 
     # Define best domains
-    DOMAINS="cf.254301.xyz isp.254301.xyz www.visa.cn adventure-x.org www.hltv.org"
+    DOMAINS="cf.254301.xyz isp.254301.xyz run.254301.xyz adventure-x.org www.hltv.org"
     
     ALL_LINKS=""
 
