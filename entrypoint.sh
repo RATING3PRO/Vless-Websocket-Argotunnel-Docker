@@ -150,6 +150,13 @@ if [ -n "$PUBLIC_HOSTNAME" ]; then
     
     ALL_LINKS=""
 
+    # Output Origin Node (Server is the Argo hostname)
+    LINK="vless://${UUID}@${PUBLIC_HOSTNAME}:443?encryption=none&security=tls&sni=${PUBLIC_HOSTNAME}&type=ws&host=${PUBLIC_HOSTNAME}&path=${WSPATH_ENCODED}#Argo-Origin"
+    echo -e "${YELLOW}Server: ${PUBLIC_HOSTNAME} (Origin)${NC}"
+    log_link "$LINK"
+    echo ""
+    ALL_LINKS="${ALL_LINKS}${LINK}\n"
+
     for DOMAIN in $DOMAINS; do
         LINK="vless://${UUID}@${DOMAIN}:443?encryption=none&security=tls&sni=${PUBLIC_HOSTNAME}&type=ws&host=${PUBLIC_HOSTNAME}&path=${WSPATH_ENCODED}#${DOMAIN}-Argo"
         
