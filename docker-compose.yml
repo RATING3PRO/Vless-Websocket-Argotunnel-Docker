@@ -8,6 +8,7 @@ services:
       - UUID=your-uuid-here # Your UUID
       - ARGO_TOKEN=eyJhIjoi... # Your Argo Tunnel Token
       - PUBLIC_HOSTNAME=vless.example.com  # Your Tunnel Domain
+      - ECH_CONFIG=true # Enable ECH Config Or Custom ECH Config
     # Network is handled by cloudflared tunnel, no ports need to be exposed
     # ports:
     #   - "8080:8080" 
