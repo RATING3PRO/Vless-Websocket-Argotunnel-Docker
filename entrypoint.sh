@@ -140,6 +140,31 @@ fi
 
 # Generate and Output Links
 if [ -n "$PUBLIC_HOSTNAME" ]; then
+    # Prepare ECH argument
+    ECH_STR=""
+    if [ -n "$ECH_CONFIG" ]; then
+        if [ "$ECH_CONFIG" = "true" ]; then
+            ECH_STR="&ech=cloudflare-ech.com%2Bhttps%3A%2F%2Fvercel.doh.xie.today%2Fapi%2Fdoh%2Fgoogle"
+        else
+            # URL Encode the custom ECH config using awk
+            ECH_ENCODED=$(echo -n "$ECH_CONFIG" | awk 'BEGIN {
+                for (i = 0; i <= 255; i++) ord[sprintf("%c", i)] = i
+            }
+            {
+                len = length($0)
+                for (i = 1; i <= len; i++) {
+                    c = substr($0, i, 1)
+                    if (c ~ /[a-zA-Z0-9.~_-]/) {
+                        printf "%s", c
+                    } else {
+                        printf "%%%02X", ord[c]
+                    }
+                }
+            }')
+            ECH_STR="&ech=${ECH_ENCODED}"
+        fi
+    fi
+
     echo ""
     log_info "---------------------------------------------------"
     log_info "VLESS Share Links (Import to v2rayN / sing-box / Clash)"
@@ -151,14 +176,14 @@ if [ -n "$PUBLIC_HOSTNAME" ]; then
     ALL_LINKS=""
 
     # Output Origin Node (Server is the Argo hostname)
-    LINK="vless://${UUID}@${PUBLIC_HOSTNAME}:443?encryption=none&security=tls&sni=${PUBLIC_HOSTNAME}&fp=chrome&type=ws&host=${PUBLIC_HOSTNAME}&path=${WSPATH_ENCODED}#Argo-Origin"
+    LINK="vless://${UUID}@${PUBLIC_HOSTNAME}:443?encryption=none&security=tls&sni=${PUBLIC_HOSTNAME}&fp=chrome&type=ws&host=${PUBLIC_HOSTNAME}&path=${WSPATH_ENCODED}${ECH_STR}#Argo-Origin"
     echo -e "${YELLOW}Server: ${PUBLIC_HOSTNAME} (Origin)${NC}"
     log_link "$LINK"
     echo ""
     ALL_LINKS="${ALL_LINKS}${LINK}\n"
 
     for DOMAIN in $DOMAINS; do
-        LINK="vless://${UUID}@${DOMAIN}:443?encryption=none&security=tls&sni=${PUBLIC_HOSTNAME}&fp=chrome&type=ws&host=${PUBLIC_HOSTNAME}&path=${WSPATH_ENCODED}#${DOMAIN}-Argo"
+        LINK="vless://${UUID}@${DOMAIN}:443?encryption=none&security=tls&sni=${PUBLIC_HOSTNAME}&fp=chrome&type=ws&host=${PUBLIC_HOSTNAME}&path=${WSPATH_ENCODED}${ECH_STR}#${DOMAIN}-Argo"
         
         echo -e "${YELLOW}Server: ${DOMAIN}${NC}"
         log_link "$LINK"
