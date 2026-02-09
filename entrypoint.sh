@@ -40,6 +40,16 @@ log_info "Starting VLESS-WS-ARGO Node"
 log_info "UUID: $UUID"
 log_info "WSPATH: $WSPATH"
 
+if [ -n "$ECH_CONFIG" ]; then
+    if [ "$ECH_CONFIG" = "true" ]; then
+        log_info "ECH: Enabled (Default Config)"
+    else
+        log_info "ECH: Enabled (Custom Config)"
+    fi
+else
+    log_info "ECH: Disabled"
+fi
+
 # Quick Tunnel Mode (TryCloudflare)
 if [ -z "$ARGO_TOKEN" ]; then
     log_warn "ARGO_TOKEN not provided. Using Quick Tunnel (trycloudflare.com)..."
