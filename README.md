@@ -78,7 +78,7 @@ docker run -d \
   -e ARGO_TOKEN="eyJhIjoi..." \
   -e PUBLIC_HOSTNAME="vless.example.com" \
   -e ECH_CONFIG="true" \
-  -e EDGE_IP_VER="6" \
+  -e EDGE_IP_VER="4" \
   ghcr.io/rating3pro/vless-websocket-argotunnel-docker:latest
 ```
 

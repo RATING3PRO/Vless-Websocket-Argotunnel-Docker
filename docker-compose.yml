@@ -9,6 +9,7 @@ services:
       - ARGO_TOKEN=eyJhIjoi... # Your Argo Tunnel Token
       - PUBLIC_HOSTNAME=vless.example.com  # Your Tunnel Domain
       - ECH_CONFIG=true # Enable ECH Config Or Custom ECH Config
+    # - EDGE_IP_VER="6" # Optional: Set to "6" if using IPv6 connection
     # Network is handled by cloudflared tunnel, no ports need to be exposed
     # ports:
     #   - "8080:8080" 
